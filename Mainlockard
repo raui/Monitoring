@@ -1,0 +1,107 @@
+package lockard;
+import java.io.*;
+import java.net.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+public class Mainlockard extends JFrame implements ActionListener {
+    public static int con = 0;
+	public static int prava = 0;
+	public static String agent = "";
+    private static JPanel jp, jpp;
+	private  static JLabel label,pl;
+	private static String ulog;
+	private static String upass;
+    private static	String uid;
+	private static JTextField lfield, Bid;
+	private static JPasswordField pfield;
+    private static JButton connect, exit;
+	public static Mainlockard  Ml;
+	public static String CurC, defautCur = "55.63,37.22";
+    public Mainlockard(){       
+		 super("MERITEC S.O.S SERVICE V1.0.0");
+		// Image im = Toolkit.getDefaultToolkit().getImage("C:/Program Files/Java/jdk1.7.0_45/bin/lockard/fav.png");		 				
+		// setIconImage(im);
+		 try {
+		 String imagePath = "fav.png";
+         InputStream imgStream = Mainlockard.class.getResourceAsStream(imagePath );
+         BufferedImage myImg = ImageIO.read(imgStream);
+		// new  Mainlockard().setIconImage(myImg);
+		  setIconImage(myImg);
+		  } catch (Exception ie){}
+		 getContentPane().setBackground(Color.orange);
+		 getContentPane().setPreferredSize(new Dimension(300, 200));
+		 setBounds(400, 200, 500, 200);	
+		 setResizable(false);
+         setLocationRelativeTo(null);
+         setFont(new Font("Serif", Font.BOLD, 14));		 
+	     jp = new JPanel(new FlowLayout()); //panel login
+		 jpp = new JPanel(new FlowLayout()); //panel pass	
+         jp.setLayout(null);
+         jpp.setLayout(null);
+         // String vd = new String(("вход :").getBytes(),Charset.forName("utf-8")) ; en cyrillique		 
+         label = new JLabel("Login:"); // label login 
+		 label.setForeground(Color.gray);
+		 label.setFont(new Font("Serif", Font.BOLD, 14));
+		 label.setBounds(50,10,50,25);
+         pl = new JLabel("Password:");	// label password
+         pl.setForeground(Color.gray);
+         pl.setBounds(45,45,50,25); 		 
+         pl.setFont(new Font("Serif", Font.BOLD, 14));		 
+		 lfield = new JTextField("login"); //edit login
+		 lfield.setPreferredSize(new Dimension(400, 30));
+		 lfield.setBounds(100,10,380,30);
+		 pfield = new JPasswordField("Password"); //edit password
+		 pfield.setPreferredSize(new Dimension(180, 30));
+		 pfield.setBounds(100,45,182,30);
+		 Bid = new JTextField("Code");
+         Bid.setBounds(290,45,189,30);		             
+         jp.add(label);	 
+         jp.add(lfield); 
+         jp.add(pl);
+		 jp.add(pfield); 
+         jp.add(Bid);		 
+		 connect = new JButton("se connecter");
+		 connect.setForeground(Color.white);
+		 connect.setBackground(Color.blue);
+		 connect.setBounds(100,120, 182,25);
+		 exit = new JButton("Fermer");
+		 exit.setForeground(Color.white);
+		 exit.setBounds(290,120, 189,25);
+		 exit.setBackground(Color.blue);
+		 exit.addActionListener(this);
+		 connect.addActionListener(this);
+		 jp.add(connect);
+		 jp.add(exit);
+		 add(jp );		
+ }
+public void actionPerformed(ActionEvent e) {        		
+		if(e.getSource() == connect) {
+        Mymap myp = new Mymap();
+		agent = lfield.getText();
+        con = new Servercommunication().uLogin(agent,pfield.getText(),Bid.getText());
+        if (con == 1){		
+        myp.setVisible(true);
+		setVisible(false);
+         try{						
+			 myp.demarrer();
+            } catch (Exception x){} 	
+		 } else {javax.swing.JOptionPane.showMessageDialog(null,"Login ou Mot de passe ou Code incorrecte");}	
+		}else if(e.getSource() == exit) {
+		    con = 0;
+			System.exit(0);			
+		}
+	} 
+public static void main(String args[]){
+   Ml = new Mainlockard();
+   Ml.setVisible(true);
+   Ml.getContentPane().setBackground( Color.orange );
+   Ml.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   Ml.setResizable( false );
+}
+}
